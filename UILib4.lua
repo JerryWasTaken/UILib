@@ -6,6 +6,41 @@ function WindowTable:CreateWindow(name)
 			v:Destroy()
 		end
 	end
+	
+	function dragify(Frame)
+		dragToggle = nil
+		local dragSpeed = 0
+		dragInput = nil
+		dragStart = nil
+		local dragPos = nil
+		function updateInput(input)
+			local Delta = input.Position - dragStart
+			local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+			game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.25), {Position = Position}):Play()
+		end
+		Frame.InputBegan:Connect(function(input)
+			if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and UIS:GetFocusedTextBox() == nil then
+				dragToggle = true
+				dragStart = input.Position
+				startPos = Frame.Position
+				input.Changed:Connect(function()
+					if input.UserInputState == Enum.UserInputState.End then
+						dragToggle = false
+					end
+				end)
+			end
+		end)
+		Frame.InputChanged:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+				dragInput = input
+			end
+		end)
+		game:GetService("UserInputService").InputChanged:Connect(function(input)
+			if input == dragInput and dragToggle then
+				updateInput(input)
+			end
+		end)
+	end
 
 	local Tutorial = Instance.new("ScreenGui")
 	local MainFrame = Instance.new("Frame")
@@ -88,6 +123,7 @@ function WindowTable:CreateWindow(name)
 	TopBar.BorderSizePixel = 0
 	TopBar.Position = UDim2.new(0, 0, -0.084615387, 0)
 	TopBar.Size = UDim2.new(0, 430, 0, 29)
+	dragify(TopBar)
 
 	UICorner.Parent = TopBar
 
@@ -114,11 +150,11 @@ function WindowTable:CreateWindow(name)
 	CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	CloseButton.TextSize = 35.000
 	CloseButton.MouseButton1Click:Connect(function()
-	   for i,v in pairs(game.CoreGui:GetChildren()) do
-		if v.Name == name then
-			v:Destroy()
+		for i,v in pairs(game.CoreGui:GetChildren()) do
+			if v.Name == name then
+				v:Destroy()
+			end
 		end
-	    end
 	end)
 	
 	local TabHandler = {}
