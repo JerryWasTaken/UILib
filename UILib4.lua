@@ -114,7 +114,11 @@ function WindowTable:CreateWindow(name)
 	CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 	CloseButton.TextSize = 35.000
 	CloseButton.MouseButton1Click:Connect(function()
-		script.Parent.Parent.Parent:Destroy()
+	   for i,v in pairs(game.CoreGui:GetChildren()) do
+		if v.Name == name then
+			v:Destroy()
+		end
+	    end
 	end)
 	
 	local TabHandler = {}
