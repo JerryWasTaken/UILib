@@ -1,6 +1,6 @@
 local WindowTable = {}
 
-function WindowTable:CreateWindow()
+function WindowTable:CreateWindow(name)
 
 
 	local Tutorial = Instance.new("ScreenGui")
@@ -17,7 +17,7 @@ function WindowTable:CreateWindow()
 
 
 
-	Tutorial.Name = "Tutorial"
+	Tutorial.Name = name
 	Tutorial.Parent = game.CoreGui
 	Tutorial.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	Tutorial.ResetOnSpawn = false
